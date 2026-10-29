@@ -291,6 +291,7 @@ footer{display:flex;flex-direction:column;align-items:center;gap:8px}
 
 <div class="pageno" id="pageno">1 / 9</div>
 <div class="bgmToggle muted" id="bgmToggle">♪</div>
+<audio id="bgm" loop preload="auto" src="assets/bgm.m4a"></audio>
 
 <script>
 /* ===== 点击星尘（webcore 星芒粒子，取代水波纹） ===== */
@@ -382,50 +383,27 @@ footer{display:flex;flex-direction:column;align-items:center;gap:8px}
     if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){ dx<0?next():prev(); }
   },{passive:true});
 
-  /* ===== 背景音乐：WebAudio 合成氛围底噪（无外部音频文件） ===== */
+  /* ===== 背景音乐：网盘音频 bgm.m4a（循环播放） ===== */
   const bgmToggle=document.getElementById('bgmToggle');
-  let actx=null, master=null, playing=false;
-  function buildAudio(){
-    actx=new (window.AudioContext||window.webkitAudioContext)();
-    master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
-    const freqs=[110,164.81,220,277.18];
-    freqs.forEach((f,i)=>{
-      const o=actx.createOscillator(),g=actx.createGain();
-      o.type='sine';o.frequency.value=f;
-      o.detune.value=(i%2?4:-4);
-      g.gain.value=.05/(i+1);
-      const lfo=actx.createOscillator(),lg=actx.createGain();
-      lfo.frequency.value=.05+i*.021;lg.gain.value=.02;
-      lfo.connect(lg);lg.connect(g.gain);
-      o.connect(g);g.connect(master);o.start();lfo.start();
-    });
-    /* 轻微噪声铺底 */
-    const len=actx.sampleRate*2, buf=actx.createBuffer(1,len,actx.sampleRate);
-    const d=buf.getChannelData(0);
-    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*.012;
-    const src=actx.createBufferSource();src.buffer=buf;src.loop=true;
-    const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=340;
-    src.connect(lp);lp.connect(master);src.start();
-  }
+  const bgm=document.getElementById('bgm');
+  let playing=false;
   function startBGM(){
     if(playing)return;
-    if(!actx)buildAudio();
-    if(actx.state==='suspended')actx.resume();
-    master.gain.cancelScheduledValues(actx.currentTime);
-    master.gain.linearRampToValueAtTime(.5,actx.currentTime+2);
+    bgm.volume=.55;
+    const pr=bgm.play();
+    if(pr&&pr.catch)pr.catch(()=>{});   // 失败则放行下次手势重试
     playing=true;
     bgmToggle.classList.remove('muted');bgmToggle.textContent='♪';
   }
   function toggleBGM(e){
     e.stopPropagation();
     if(!playing){ startBGM(); return; }
-    master.gain.cancelScheduledValues(actx.currentTime);
-    master.gain.linearRampToValueAtTime(0,actx.currentTime+.5);
+    bgm.pause();
     playing=false;
     bgmToggle.classList.add('muted');bgmToggle.textContent='🔇';
   }
   bgmToggle.addEventListener('click',toggleBGM,{passive:true});
-  ['touchstart','pointerdown'].forEach(ev=>document.addEventListener(ev,startBGM,{passive:true}));
+  ['touchstart','pointerdown','click'].forEach(ev=>document.addEventListener(ev,startBGM,{passive:true}));
 
   function enter(){ started=true; bg.classList.add('show'); showPage(0); }
   const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
