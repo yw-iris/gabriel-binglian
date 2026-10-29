@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>痛苦与欢愉 总如影随形 · Gabriel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&family=Dancing+Script:wght@500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&family=Dancing+Script:wght@500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{
+  --serif:'Noto Serif SC',serif;
+  --sans:'Noto Sans SC',system-ui,sans-serif;
+  --script:'Dancing Script',cursive;
+  --display:'Cinzel',serif;
+  /* 全站仅两种字体颜色：克莱因蓝（白底/亮图区） · 纸白（暗底区） */
+  --kb:#1a35c4;
+  --ink:#eef1fc;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:#05050d;overflow-x:hidden;line-height:2.1;-webkit-font-smoothing:antialiased}
+
+/* ===== 开场：黑底 · 中心大十字星 + 周围迸发小星（webcore 星芒） ===== */
+.intro{position:fixed;inset:0;z-index:50;background:#05050d;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:opacity 1.1s ease}
+.intro.done{opacity:0;pointer-events:none}
+.intro .stage{position:relative;width:min(62vw,340px);height:min(62vw,340px);display:flex;align-items:center;justify-content:center}
+.intro .star{width:100%;height:100%;animation:starIn 1.6s cubic-bezier(.2,.9,.25,1) both, starBreath 3.2s ease-in-out 1.6s infinite}
+@keyframes starIn{from{transform:scale(.12) rotate(-140deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@keyframes starBreath{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.07) rotate(8deg)}}
+.intro .ray{position:absolute;inset:0;animation:rayIn 2.4s ease .5s both}
+@keyframes rayIn{from{opacity:0;transform:scale(.4)}to{opacity:.9;transform:scale(1)}}
+.intro-cap{margin-top:34px;font-family:var(--display);letter-spacing:.5em;font-size:12px;text-transform:uppercase;color:var(--ink);opacity:.55;text-align:center;animation:capIn 1.6s ease 1.2s both}
+@keyframes capIn{from{opacity:0;transform:translateY(14px)}to{opacity:.55;transform:none}}
+.intro-skip{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font-family:var(--script);font-size:15px;color:var(--ink);opacity:.5;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{opacity:.22;transform:translate(-50%,0)}50%{opacity:.75;transform:translate(-50%,6px)}}
+
+/* ===== 点击星尘画布 ===== */
+#spark{position:fixed;inset:0;z-index:8;pointer-events:none}
+
+/* ===== 底图：随页切换 ===== */
+.bg{position:fixed;inset:0;z-index:0;background:#04060f;opacity:0;transition:opacity 1.1s ease}
+.bg.show{opacity:1}
+.bg .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity .8s ease}
+.bg .bgimg.on{opacity:1}
+.bg .veil{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(130% 90% at 50% 44%,rgba(4,5,14,.38) 40%,rgba(4,5,14,.66) 78%,rgba(4,5,14,.82)),
+  linear-gradient(180deg,rgba(4,5,14,.5),rgba(4,5,14,.28) 30%,rgba(4,5,14,.34) 66%,rgba(4,5,14,.66))}
+
+/* ===== 逐页模块 ===== */
+.pages{position:fixed;inset:0;z-index:2}
+.page{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:safe center;align-items:center;text-align:center;padding:9vh 0;opacity:0;pointer-events:none;transition:opacity .8s ease;overflow-y:auto}
+.page :where(.line,.script,.h2,.quotes p,.notes li,.lead,.black,.lead){text-shadow:0 1px 3px rgba(3,4,10,.9),0 0 22px rgba(3,4,10,.75)}
+.page.active{opacity:1;pointer-events:auto}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
+.eyebrow{font-family:var(--display);letter-spacing:.4em;font-size:11px;color:var(--ink);opacity:.55;text-transform:uppercase;margin-bottom:26px}
+.h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,5.4vw,44px);line-height:1.35;letter-spacing:.04em;color:var(--ink);margin-top:30px}
+.h2 small{display:block;font-size:.44em;font-weight:300;letter-spacing:.3em;opacity:.62;margin-top:8px}
+.rule{width:54px;height:1px;background:linear-gradient(90deg,rgba(238,241,252,.7),transparent);margin:34px auto}
+.line{font-family:var(--serif);font-weight:300;font-size:clamp(20px,3.6vw,28px);line-height:1.7;letter-spacing:.05em;margin:26px 0;color:var(--ink)}
+.script{font-family:var(--script);font-size:clamp(21px,3.8vw,31px);line-height:1.45;opacity:.9;margin:26px 0;color:var(--ink)}
+.black{font-family:var(--display);letter-spacing:.14em;font-size:clamp(13px,2.4vw,16px);opacity:.75;margin-top:44px;color:var(--ink)}
+.lead{font-family:var(--serif);letter-spacing:.3em;font-size:clamp(15px,2.8vw,19px);opacity:.85;margin-top:10px;color:var(--ink)}
+.em{font-weight:600;letter-spacing:.06em}
+.en{font-family:var(--display);font-size:.72em;letter-spacing:.1em;opacity:.72}
+
+/* hero */
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,8.2vw,80px);line-height:1.18;letter-spacing:.05em;color:var(--ink);
+  text-shadow:0 0 26px rgba(90,130,255,.65),0 0 64px rgba(40,80,220,.5)}
+.hero .eyebrow{margin-bottom:26px}
+.hero .sub{font-family:var(--script);color:var(--ink);font-size:clamp(22px,4.2vw,32px);margin-top:22px;text-shadow:0 0 18px rgba(90,130,255,.6)}
+.hero .tag{font-family:var(--serif);font-weight:300;letter-spacing:.34em;font-size:clamp(12px,2.4vw,15px);color:var(--ink);opacity:.68;margin-top:34px}
+.hero .oath{font-family:var(--serif);font-weight:300;font-size:clamp(15px,3vw,19px);line-height:1.9;letter-spacing:.06em;color:var(--ink);opacity:.9;margin-top:30px;text-shadow:0 0 16px rgba(90,130,255,.5)}
+.taphint{margin-top:36px;font-family:var(--script);font-size:14px;opacity:.62;animation:cue2 2.4s ease-in-out infinite}
+@keyframes cue2{0%,100%{opacity:.25}50%{opacity:.8}}
+
+/* 证件事条 */
+.idcard{display:flex;flex-wrap:wrap;gap:12px 14px;margin:34px 0;justify-content:center}
+.idcard span{border:1px solid rgba(238,241,252,.24);border-radius:3px;padding:8px 17px;font-size:14px;letter-spacing:.08em;color:var(--ink);background:rgba(5,6,16,.28)}
+
+/* 风格列表 */
+.stylelist{margin-top:30px;font-family:var(--serif);font-size:clamp(16px,2.8vw,20px);line-height:2.1;text-align:left;color:var(--ink)}
+.stylelist .row{padding:14px 4px;border-bottom:1px solid rgba(238,241,252,.15)}
+.stylelist .k{font-weight:600;margin-right:10px;letter-spacing:.06em}
+.stylelist .em{opacity:.7}
+
+/* 须知 */
+.notes{text-align:left;margin:18px 0 8px;padding-left:0;list-style:none;counter-reset:n}
+.notes li{counter-increment:n;position:relative;padding:10px 0 10px 46px;font-size:clamp(13.5px,2.5vw,15.5px);line-height:1.95;border-bottom:1px solid rgba(238,241,252,.12);color:var(--ink)}
+.notes li::before{content:counter(n,decimal-leading-zero);position:absolute;left:0;top:12px;font-family:var(--display);font-size:13px;letter-spacing:.1em;opacity:.55}
+
+/* 引语 */
+.quotes p{font-family:var(--serif);font-weight:300;font-size:clamp(16px,3vw,21px);line-height:2;letter-spacing:.05em;color:var(--ink);opacity:.92;margin:14px 0}
+
+/* 页脚 */
+footer{display:flex;flex-direction:column;align-items:center;gap:8px}
+.fmark{font-family:var(--serif);font-size:34px;opacity:.7;margin-bottom:14px;color:var(--ink)}
+.credit{font-family:var(--display);font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.5;margin-top:22px;color:var(--ink)}
+.credit a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(238,241,252,.35)}
+
+/* 页码 & 音乐 */
+.pageno{position:fixed;right:18px;bottom:15px;z-index:6;font-family:var(--display);letter-spacing:.22em;font-size:12px;color:var(--ink);opacity:.55}
+.bgmToggle{position:fixed;left:16px;bottom:12px;z-index:6;width:38px;height:38px;border-radius:50%;border:1px solid rgba(238,241,252,.28);background:rgba(5,6,16,.35);color:var(--ink);font-size:15px;line-height:36px;text-align:center;cursor:pointer;user-select:none;opacity:.75;backdrop-filter:blur(4px)}
+.bgmToggle.muted{opacity:.45}
+
+/* reveal 逐项浮现 */
+.reveal>*{opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in>*{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<!-- 开场动画 -->
+<div class="intro" id="intro">
+  <div class="stage">
+    <svg class="star" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <radialGradient id="sg" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="34%" stop-color="#9fb6ff"/>
+          <stop offset="70%" stop-color="#2a4bef"/>
+          <stop offset="100%" stop-color="#0d1e8f"/>
+        </radialGradient>
+      </defs>
+      <g fill="url(#sg)">
+        <path d="M100,4 L112,88 L196,100 L112,112 L100,196 L88,112 L4,100 L88,88 Z"/>
+        <path d="M100,40 L106,94 L160,100 L106,106 L100,160 L94,106 L40,100 L94,94 Z" opacity=".85"/>
+      </g>
+      <circle cx="100" cy="100" r="5" fill="#eef1fc"/>
+    </svg>
+    <svg class="ray" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="rgba(140,165,255,.5)" stroke-width=".6">
+      <circle cx="100" cy="100" r="88"/>
+      <circle cx="100" cy="100" r="66" stroke-dasharray="3 7"/>
+      <circle cx="100" cy="100" r="46" stroke-dasharray="1 5"/>
+    </svg>
+  </div>
+  <div class="intro-cap">GABRIEL · 病恋</div>
+  <div class="intro-skip">轻触任意处 · 开始</div>
+</div>
+
+<!-- 点击星尘 -->
+<canvas id="spark"></canvas>
+
+<!-- 底图 -->
+<div class="bg" id="bg">
+  <img class="bgimg" src="assets/bg1.jpg" alt="">
+  <img class="bgimg" src="assets/bg2.jpg" alt="">
+  <img class="bgimg" src="assets/bg3.jpg" alt="">
+  <img class="bgimg" src="assets/bg4.jpg" alt="">
+  <img class="bgimg" src="assets/bg5.jpg" alt="">
+  <img class="bgimg" src="assets/bg6.jpg" alt="">
+  <img class="bgimg" src="assets/bg7.jpg" alt="">
+  <div class="veil"></div>
+</div>
+
+<!-- 逐页模块 -->
+<div class="pages" id="pages">
+
+  <!-- 顶页 -->
+  <div class="page" data-i="0">
+    <header class="hero reveal">
+      <div class="hero-in">
+        <div class="eyebrow">BING LIAN · 病恋</div>
+        <h1>痛苦与欢愉<br>总如影随形</h1>
+        <div class="sub">— Gabriel · 加百列</div>
+        <div class="tag">常驻八无 · 藏匿与修复</div>
+        <div class="oath">交出你隐匿的破碎与苦痛<br>我将一点点拼合修复</div>
+        <div class="taphint">轻触任意处 · 进入</div>
+      </div>
+    </header>
+  </div>
+
+  <!-- 【貪慾】 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <div class="eyebrow">GREED · 【貪慾】</div>
+      <h2 class="h2">【貪慾】</h2>
+      <div class="rule"></div>
+      <p class="line">—— 你的一切防备和不堪</p>
+      <p class="line">都是指引我窥探的兴奋剂</p>
+      <p class="script">Greed wears the face of longing,<br>yet it devours everything it touches.</p>
+    </section>
+  </div>
+
+  <!-- 貪慾 · 双语 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <div class="eyebrow">GREED · 【貪慾】</div>
+      <div class="rule"></div>
+      <div class="quotes">
+        <p><span class="en">The dark holds my stare, and it whispers for you to come in.</span></p>
+        <p>黑暗承载着我的注视，低唤你沉溺其中</p>
+        <p><span class="en">My cupidity festers in the dark, never sated.</span></p>
+        <p>我的贪欲在阴影里溃烂，永无餍足</p>
+        <p><span class="en">Surrender your concealed ruin and suffering — I shall piece them back, bit by bit.</span></p>
+        <p>交出你隐匿的破碎与苦痛，我将一点点拼合修复</p>
+        <p><span class="en">In the end, your pulse and mine will throb as one.</span></p>
+        <p>最终，你我的脉搏将一同悸动</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ｜我 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <div class="eyebrow">｜ 我 · ME</div>
+      <h2 class="h2">｜我<small>Gabriel</small></h2>
+      <div class="rule"></div>
+      <div class="idcard">
+        <span>加百列</span><span>23</span><span>泛</span><span>天蝎 Scorpio</span><span>INTJ-A</span><span>常驻八无</span>
+      </div>
+      <p class="line">藏匿起的不堪和痛苦<br><span class="em">就交给我一点点修复</span></p>
+      <p class="script">“ 只有感知到真心的存在，真心的存在才会有意义。 ”</p>
+    </section>
+  </div>
+
+  <!-- ｜無定 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <div class="eyebrow">｜無定 · STYLE</div>
+      <h2 class="h2">｜無定<small>病恋风格</small></h2>
+      <div class="rule"></div>
+      <div class="stylelist">
+        <div class="row"><span class="k">无主体风格</span> 日常 <span class="em">//</span> 随机出现</div>
+        <div class="row"><span class="k">剖析</span> 逻辑 <span class="em">//</span> 低无恋</div>
+        <div class="row"><span class="k">伪高恋</span> 高压 <span class="em">//</span> 钓系</div>
+        <div class="row"><span class="k">黑骑士</span></div>
+      </div>
+      <p class="line" style="margin-top:34px">你对我的态度<br><span class="em">决定了我的风格</span></p>
+    </section>
+  </div>
+
+  <!-- 独白 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <div class="eyebrow">MONOLOGUE · 独白</div>
+      <div class="rule"></div>
+      <p class="line">谎言被奉作真理，痛苦被歌颂<br>精神贫瘠不堪<br>妄图封闭自己以求一隅心安</p>
+      <p class="script">/ . 妄谈真心，本就是对真心的亵渎 . /</p>
+      <p class="black">Gabriel</p>
+      <p class="lead">常驻 · 白枭</p>
+    </section>
+  </div>
+
+  <!-- 单前须知 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <p class="line">过于完美的证词被复述出来<br>往往代表着刻意隐藏</p>
+      <h2 class="h2" style="margin-top:44px">加百列 · 单前须知</h2>
+      <div class="rule"></div>
+      <ol class="notes">
+        <li>在约会开始前，请告知我你的名字和喜雷，<span class="em">若未提前告知，单内踩雷概不负责</span></li>
+        <li>如觉得不适，我们之间的安全词是<span class="em">【和我断开链接】</span>，我会主动切换风格或暂停约会，并及时对您进行安抚</li>
+        <li>我们的约会具有隐私性，所以不要在未经允许的情况下以任何形式将我们约会的过程记录</li>
+        <li>我想我们应该给对方保留些许神秘感，所以请勿上升到个人生活，也不要过度窥探我的隐私</li>
+        <li>您有十分钟的时间体验这次约会，十分钟内如您觉得不满可随时提出退单或换人，<span class="em">十分钟后不予退单或换人</span></li>
+        <li>多次故意的刁难，整蛊和辱骂，会让我被迫终止这场约会</li>
+        <li>约会的时间很珍贵，如您在约定时间二十分钟后仍未赴约，我会默认您放弃这场约会（如未存单则视为送单）</li>
+        <li>约会前请阅读以上须知，一旦开始约会，我将默认您已经准备好享受约会</li>
+        <li>很期待能和您奔赴一场约会</li>
+      </ol>
+    </section>
+  </div>
+
+  <!-- ｜话术 -->
+  <div class="page">
+    <section class="wrap reveal">
+      <div class="eyebrow">｜话术 · CRAFT</div>
+      <h2 class="h2">｜话术</h2>
+      <div class="rule"></div>
+      <div class="quotes">
+        <p>锁链清脆的碰撞声<br>正好可以当做你难耐呜咽的伴奏</p>
+        <p>到底会怎么样，那总得到底，对不对</p>
+        <p>不冷啊，那为什么会控制不住颤栗呢</p>
+        <p>嘴硬的话就免了，全部吞下去吧</p>
+      </div>
+      <p class="script" style="margin-top:38px">—— 我是 加百列 ——</p>
+    </section>
+  </div>
+
+  <!-- 页脚 -->
+  <div class="page">
+    <footer class="reveal">
+      <div class="fmark">†</div>
+      <div class="line" style="text-align:center">如果你需要我，我就在。</div>
+      <div class="credit">BING LIAN · GABRIEL</div>
+    </footer>
+  </div>
+</div>
+
+<div class="pageno" id="pageno">1 / 9</div>
+<div class="bgmToggle muted" id="bgmToggle">♪</div>
+
+<script>
+/* ===== 点击星尘（webcore 星芒粒子，取代水波纹） ===== */
+(function(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const cv=document.getElementById('spark'),ctx=cv.getContext('2d');
+  let dpr=Math.min(2,devicePixelRatio||1),W,H;
+  function rs(){W=cv.width=innerWidth*dpr;H=cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
+  rs();addEventListener('resize',rs);
+  const P=[];
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  function spawn(x,y){
+    if(P.length>60)return;
+    P.push({x:x*dpr,y:y*dpr,s:rnd(2.2,6)*dpr,vx:rnd(-.6,.6)*dpr,vy:rnd(-1.2,-.2)*dpr,
+      rot:rnd(0,6.28),vr:rnd(-.05,.05),t:0,life:rnd(.9,1.8),spike:Math.random()<.35?4:(Math.random()<.5?4:8)});
+  }
+  function drawStar(p){
+    const a=Math.min(1,Math.min(p.t*4,(1-p.t/p.life)*2.4));
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.globalAlpha=a;
+    ctx.shadowColor='rgba(160,185,255,'+(.8*a)+')';ctx.shadowBlur=10;
+    ctx.fillStyle='rgba(240,245,255,'+(.95*a)+')';
+    const R=p.s,r=R*.28;
+    ctx.beginPath();
+    for(let i=0;i<p.spike*2;i++){
+      const rad=i%2?r:R, ang=i*Math.PI/p.spike;
+      ctx.lineTo(Math.cos(ang)*rad,Math.sin(ang)*rad);
+    }
+    ctx.closePath();ctx.fill();
+    ctx.restore();
+  }
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=P.length-1;i>=0;i--){
+      const p=P[i];p.t+=.016;p.x+=p.vx;p.y+=p.vy;p.vy+=.008*dpr;p.rot+=p.vr;
+      drawStar(p);
+      if(p.t>p.life)P.splice(i,1);
+    }
+    requestAnimationFrame(loop);
+  })();
+  function burst(x,y){
+    spawn(x,y);
+    for(let k=0;k<4;k++)spawn(x+rnd(-30,30),y+rnd(-24,24));
+  }
+  addEventListener('click',e=>burst(e.clientX,e.clientY),{passive:true});
+  addEventListener('touchstart',e=>{const t=e.touches[0];if(t)burst(t.clientX,t.clientY);},{passive:true});
+})();
+
+/* ===== 开场 → 逐页翻页 ===== */
+(function(){
+  const intro=document.getElementById('intro');
+  const bg=document.getElementById('bg');
+  const pageno=document.getElementById('pageno');
+  const pages=[...document.querySelectorAll('.page')];
+  const bgs=[...document.querySelectorAll('#bg .bgimg')];
+  let idx=0, started=false;
+  /* 每页对应底图 */
+  const BGMAP=[0,1,3,4,1,5,2,4,0];
+  function showPage(i){
+    const cur=pages[idx], nxt=pages[i];
+    if(cur)cur.classList.remove('active');
+    nxt.classList.add('active');
+    const bi=BGMAP[i];
+    bgs.forEach((b,k)=>b.classList.toggle('on',k===bi));
+    nxt.querySelectorAll('.reveal').forEach(r=>{
+      [...r.children].forEach((c,k)=>c.style.transitionDelay=(k*0.09)+'s');
+      r.classList.remove('in');
+      void r.offsetWidth;
+      r.classList.add('in');
+    });
+    nxt.scrollTop=0;
+    idx=i;
+    pageno.textContent=(i+1)+' / '+pages.length;
+  }
+  function next(){ showPage((idx+1)%pages.length); }
+  function prev(){ showPage((idx-1+pages.length)%pages.length); }
+  document.addEventListener('click',()=>{ if(started)next(); },{passive:true});
+  /* 键盘 & 滑动 */
+  addEventListener('keydown',e=>{
+    if(!started)return;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ')next();
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')prev();
+  });
+  let tx=0,ty=0;
+  addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  addEventListener('touchend',e=>{
+    if(!started)return;
+    const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){ dx<0?next():prev(); }
+  },{passive:true});
+
+  /* ===== 背景音乐：WebAudio 合成氛围底噪（无外部音频文件） ===== */
+  const bgmToggle=document.getElementById('bgmToggle');
+  let actx=null, master=null, playing=false;
+  function buildAudio(){
+    actx=new (window.AudioContext||window.webkitAudioContext)();
+    master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
+    const freqs=[110,164.81,220,277.18];
+    freqs.forEach((f,i)=>{
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.type='sine';o.frequency.value=f;
+      o.detune.value=(i%2?4:-4);
+      g.gain.value=.05/(i+1);
+      const lfo=actx.createOscillator(),lg=actx.createGain();
+      lfo.frequency.value=.05+i*.021;lg.gain.value=.02;
+      lfo.connect(lg);lg.connect(g.gain);
+      o.connect(g);g.connect(master);o.start();lfo.start();
+    });
+    /* 轻微噪声铺底 */
+    const len=actx.sampleRate*2, buf=actx.createBuffer(1,len,actx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*.012;
+    const src=actx.createBufferSource();src.buffer=buf;src.loop=true;
+    const lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=340;
+    src.connect(lp);lp.connect(master);src.start();
+  }
+  function startBGM(){
+    if(playing)return;
+    if(!actx)buildAudio();
+    if(actx.state==='suspended')actx.resume();
+    master.gain.cancelScheduledValues(actx.currentTime);
+    master.gain.linearRampToValueAtTime(.5,actx.currentTime+2);
+    playing=true;
+    bgmToggle.classList.remove('muted');bgmToggle.textContent='♪';
+  }
+  function toggleBGM(e){
+    e.stopPropagation();
+    if(!playing){ startBGM(); return; }
+    master.gain.cancelScheduledValues(actx.currentTime);
+    master.gain.linearRampToValueAtTime(0,actx.currentTime+.5);
+    playing=false;
+    bgmToggle.classList.add('muted');bgmToggle.textContent='🔇';
+  }
+  bgmToggle.addEventListener('click',toggleBGM,{passive:true});
+  ['touchstart','pointerdown'].forEach(ev=>document.addEventListener(ev,startBGM,{passive:true}));
+
+  function enter(){ started=true; bg.classList.add('show'); showPage(0); }
+  const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(rm||!intro){ if(intro)intro.style.display='none'; enter(); return; }
+  let done=false;
+  function finish(){
+    if(done)return; done=true;
+    intro.classList.add('done');
+    enter();
+    setTimeout(()=>{ intro.style.display='none'; },1100);
+  }
+  intro.addEventListener('click',e=>{e.stopPropagation();finish();},{passive:true});
+  setTimeout(finish,5200);
+})();
+</script>
+</body>
+</html>
